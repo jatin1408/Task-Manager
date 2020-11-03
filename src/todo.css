@@ -33,6 +33,7 @@ legend {
   padding: 0.4rem;
   color: rgb(250, 191, 191);
   font-size: 1.4rem;
+  width: 18% !important;
 }
 
 .masthead-brand {

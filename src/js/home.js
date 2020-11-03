@@ -1,5 +1,6 @@
 
 import {fetchData,logOut} from './utils/getInfo';
+import "../todo.css";
 var userInformation={};
 window.addEventListener('load',e=>{
     const checkToken=localStorage.getItem('token');

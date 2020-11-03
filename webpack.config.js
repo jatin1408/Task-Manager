@@ -1,5 +1,6 @@
 const path=require('path');
 const HWP=require('html-webpack-plugin');
+
 module.exports={
    entry:{
        app:"./src/js/index.js",
@@ -12,6 +13,15 @@ module.exports={
         path:path.resolve(__dirname,'dist'),
         filename:'js/[name].bundle.js'
     },
+    
+     module: {
+    rules: [
+      {
+        test: /\.css$/,
+        use: ['style-loader', 'css-loader'],
+      },
+    ],
+  },
     devServer:{
         contentBase:'./dist'
     },
