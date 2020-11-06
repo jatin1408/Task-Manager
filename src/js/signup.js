@@ -1,6 +1,6 @@
  import axios from 'axios';
  const signUp = document.querySelector('.boxSignUp');
-       
+       localStorage.clear();
         signUp.addEventListener("submit", (e) => {
             e.preventDefault();
             if (signUp.elements[2].value === signUp.elements[3].value) {

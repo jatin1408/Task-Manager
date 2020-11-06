@@ -29,7 +29,7 @@ axios.interceptors.request.use(
 }
 const logOut=async ()=>{
     try{
-        const loggedOut=await axios.post(apiUrl+"/users/logout");
+        const loggedOut=await axios.post(apiUrl+"/users/logoutAll");
        
         return loggedOut.status;
     }
@@ -58,7 +58,18 @@ const getAllTask=async (data) =>{
         return null;
     }
 }
+const getAvatar=async ()=>{
+    var getId=await axios.get(apiUrl+"/users/me");
+    getId=getId.data._id;
+    var avatar=await axios.get(apiUrl+"/users/"+getId+"/avatar");
+    console.log(avatar);
+    if(avatar.status===200){
+        return avatar.config.url;
+    }
+    return null;
+}
 
-export {fetchData,logOut,postTask,getAllTask};
+
+export {fetchData,logOut,postTask,getAllTask,getAvatar};
 
  

@@ -439,5 +439,8 @@ legend {
 .date--hide{
   display: none;
 }
+.db--hide{
+  display: none;
+}
 
 /* STATUS SECTION ENDS */

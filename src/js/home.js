@@ -1,5 +1,4 @@
-
-import {fetchData,logOut,postTask,getAllTask} from './utils/getInfo';
+import {fetchData,logOut,postTask,getAllTask,getAvatar} from './utils/getInfo';
 import "../todo.css";
 var userInformation={};
 const submitButton=document.querySelector('.subject');
@@ -9,9 +8,29 @@ window.addEventListener('load',e=>{
           window.location.replace(window.location.origin+"/index.html");
     }
 })
+
+window.addEventListener('load',e=>{
+   getProfile();
+})
 window.addEventListener('load',e=>{
     getTasks();
 })
+
+const getProfile=async()=>{
+    const url=await getAvatar();
+    if(url!=null){
+          renderPhoto(url);
+    }
+  
+}
+const renderPhoto=(url)=>{
+    console.log(url);
+    const dom=document.querySelector('.user_image');
+    dom.src="";
+    dom.src=url;
+
+}
+
 const getTasks=async () =>{
 /*   
 doneList.querySelectorAll('*').forEach(n => n.remove());
@@ -31,11 +50,15 @@ progressList.querySelectorAll('*').forEach(n => n.remove());
         
         else{
             window.alert("Smoething went wrong");
+            localStorage.clear();
+             window.location.replace(window.location.origin+"/index.html");
             return;
         }
     }
     else{
         window.alert('Something went wrong');
+        localStorage.clear();
+         window.location.replace(window.location.origin+"/index.html");
         return;
     }
     result.forEach(renderTask);
@@ -160,7 +183,7 @@ submitButton.addEventListener('submit',e=>{
         }
     }
     const objData={
-        "description":des.value,
+        "description":des.value.trim(),
         "dueDate":date.value,
         "taskState":state
     }
@@ -209,11 +232,12 @@ const renderTask=objData=>{
    
     const container=document.getElementById(divSelection);
   
-
-    const html=`<div class="draggable ${divSelection}-items" id="${divSelection}-item-${count}" draggable="true">
-                    ${objData.description}
-                   <p id="date" class="date--hide">${objData.dueDate}</p>
-                </div>`
+    var date=new Date(objData.dueDate)
+    var final=date.getDate();
+    final+="-"+date.getMonth();
+    final+="-"+date.getFullYear();
+    
+    const html=`<div class="draggable ${divSelection}-items" id="${divSelection}-item-${count}" draggable="true">${objData.description}<p id="date" class="date--hide">${final}</p><p id="dbId" class="db--hide">${objData._id}</p></div>`
     container.insertAdjacentHTML('beforeend',html);
 }
 

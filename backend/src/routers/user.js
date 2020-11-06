@@ -99,7 +99,7 @@ const avatar=multer({
     }
 })
 router.post('/users/me/avatar',auth,avatar.single('avatar'),async (req,res)=>{
-    const buffer=await sharp(req.file.buffer).resize({width:250,height:250}).png().toBuffer()
+    const buffer=await sharp(req.file.buffer).resize({width:225,height:225}).png().toBuffer()
     req.user.avatar=buffer
     await req.user.save()
     res.send()
