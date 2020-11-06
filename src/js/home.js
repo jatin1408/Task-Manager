@@ -24,7 +24,7 @@ const getProfile=async()=>{
   
 }
 const renderPhoto=(url)=>{
-    console.log(url);
+    
     const dom=document.querySelector('.user_image');
     dom.src="";
     dom.src=url;
@@ -32,13 +32,13 @@ const renderPhoto=(url)=>{
 }
 
 const getTasks=async () =>{
-/*   
+
 doneList.querySelectorAll('*').forEach(n => n.remove());
 
 todoList.querySelectorAll('*').forEach(n => n.remove());
 
 progressList.querySelectorAll('*').forEach(n => n.remove());
-*/
+
     var result=await getAllTask();
     if(result){
         if(result.status===200){
@@ -111,15 +111,46 @@ setInterval(() => {
 
 // Drag and drop behaviour
 
-draggables.forEach(draggable => {
-    // Adding a blur effect on whole section when we click on any task for its details
-    draggable.addEventListener("click", e => {
-       var id=e.target.id;
-       console.log(id);
-       console.log(e.target.textContent);
-       console.log(e.target);
-  
+containers.forEach(container => {
 
+    container.addEventListener("click", e => {
+        
+        if (!e.target.classList.contains("draggable")) return;
+        var id = e.target.id;
+        var content=e.target.textContent;
+   
+        var title=""
+        var i=0
+        for(;i<content.length;i++){
+            if(content.charAt(i)==='%'){
+                break;
+            }
+            title+=content.charAt(i);
+        }
+        i++;
+      
+        var date="";
+        for(;i<content.length;i++){
+             if(content.charAt(i)==='%'){
+                break;
+            }
+            date+=content.charAt(i);
+        }
+     
+        
+       
+       var status;
+       const c=id.charAt(0)
+       if(c==='t'){
+           status='Todo';
+       }
+       else if(c==='p'){
+           status='In Progress';
+       }
+       else{
+           status='Completed';
+       }
+     
         if (statusSection.classList.contains("blur")) {
             statusSection.classList.remove("blur");
             infoBox.style.display = "none";
@@ -129,27 +160,33 @@ draggables.forEach(draggable => {
             if (e.target.classList.contains("todo-list-items")) {
                 infoBox.style.background = "maroon";
                 infoBox.style.color = "white";
+                infoBox.innerHTML=` Due Date : ${date} <br> Topic : ${title} <br> Status : ${status}`
             } else if (e.target.classList.contains("progress-list-items")) {
                 infoBox.style.background = "rgb(235, 235, 4)";
                 infoBox.style.color = "black";
+                 infoBox.innerHTML=` Due Date : ${date} <br> Topic : ${title} <br> Status : ${status}`
             } else {
                 infoBox.style.background = "green";
                 infoBox.style.color = "white";
+                 infoBox.innerHTML=` Due Date : ${date} <br> Topic : ${title} <br> Status : ${status}`
             }
         }
     });
 
-    draggable.addEventListener("dragstart", () => {
+    container.addEventListener("dragstart", e => {
+        const targetElement = e.target;
         setTimeout(() => {
-            draggable.classList.add("hide");
+            if (targetElement.classList.contains("draggable"))
+                targetElement.classList.add("hide");
         }, 0);
     });
-    draggable.addEventListener("dragend", () => {
-        draggable.classList.remove("hide");
-    });
-});
 
-containers.forEach(container => {
+    container.addEventListener("dragend", e => {
+        const targetElement = e.target;
+        if (targetElement.classList.contains("draggable"))
+            targetElement.classList.remove("hide");
+    });
+
     container.addEventListener("dragover", e => {
         e.preventDefault();
         // In the below line we have used the fact that when an element starts dragging, we have added a class to it i.e. hide class and this class in only present in the element which is being dragged. 
@@ -167,7 +204,7 @@ containers.forEach(container => {
             currentDraggable.classList = "draggable " + targetID + "-items";
         }
     });
-    
+
 });
 submitButton.addEventListener('submit',e=>{
     e.preventDefault();
@@ -179,7 +216,7 @@ submitButton.addEventListener('submit',e=>{
     for(var i=0;i<ele.length;i++){
         if(ele[i].checked){
             state=ele[i].value;
-            console.log(ele[i].value);
+    
         }
     }
     const objData={
@@ -234,11 +271,20 @@ const renderTask=objData=>{
   
     var date=new Date(objData.dueDate)
     var final=date.getDate();
+    
     final+="-"+date.getMonth();
     final+="-"+date.getFullYear();
-    
-    const html=`<div class="draggable ${divSelection}-items" id="${divSelection}-item-${count}" draggable="true">${objData.description}<p id="date" class="date--hide">${final}</p><p id="dbId" class="db--hide">${objData._id}</p></div>`
+  
+    if(divSelection==='done-list'){
+         const html=`<div class="draggable ${divSelection}-items" id="${divSelection}-item-${count}" draggable="true">${objData.description}<p id="date" class="date--hide">%${final}</p><p id="dbId" class="db--hide">%${objData._id}</p><i id="remove-btn" class="fa fa-trash-o"></i></div>`
     container.insertAdjacentHTML('beforeend',html);
+    }
+    else{
+
+    
+    const html=`<div class="draggable ${divSelection}-items" id="${divSelection}-item-${count}" draggable="true">${objData.description}<p id="date" class="date--hide">%${final}</p><p id="dbId" class="db--hide">%${objData._id}</p></div>`
+    container.insertAdjacentHTML('beforeend',html);
+    }
 }
 
 

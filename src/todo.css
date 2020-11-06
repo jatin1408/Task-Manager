@@ -395,6 +395,7 @@ legend {
 }
 
 .done-list-items {
+  position: relative;
   border: 2px solid rgb(10, 143, 10);
   border-left: 8px solid rgb(10, 143, 10);
 }
@@ -442,5 +443,14 @@ legend {
 .db--hide{
   display: none;
 }
+#remove-btn {
+    position: absolute;
+    top: .5vh;
+    right: 1vh;
+    font-size: 1.3rem;
+    color: rgb(165, 3, 3);
+    cursor: pointer;
+}
+
 
 /* STATUS SECTION ENDS */
