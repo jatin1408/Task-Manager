@@ -27,7 +27,7 @@
         </div>
     </header>
     <div class="main-container">
-        <form action="#" class="subject">
+        <form action="#" class="subject" method="POST">
             <fieldset>
                 <legend>ADD NEW TASK</legend>
                 <div class="main-content">
@@ -45,11 +45,11 @@
                     <h3 class="state-heading"> <i class="fa fa-tasks"></i> Task State:</h3>
                     <label for="taskState"></label>
                     <p class="state-para">
-                        <input type="radio" name="taskState" id="taskState" checked />
+                        <input type="radio" name="taskState" id="taskState" value=0 />
                         <span class="task-notcompleted">Not Completed</span>
-                        <input type="radio" name="taskState" id="taskState" />
+                        <input type="radio" name="taskState" id="taskState" value=1 />
                         <span class="task-inprogress">In Progress</span>
-                        <input type="radio" name="taskState" id="taskState" />
+                        <input type="radio" name="taskState" id="taskState" value=2 />
                         <span class="task-completed">Completed</span>
                     </p>
                 </div>
@@ -65,7 +65,7 @@
                         </div>
                     </div>
                     <div class="submit">
-                        <input type="submit" value="Add Task" />
+                        <input type="submit" class="submitButton" value="Add Task" />
                         <input type="reset" value="Reset" />
                     </div>
                 </div>

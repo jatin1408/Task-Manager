@@ -1,19 +1,49 @@
 
-import {fetchData,logOut} from './utils/getInfo';
+import {fetchData,logOut,postTask,getAllTask} from './utils/getInfo';
 import "../todo.css";
 var userInformation={};
+const submitButton=document.querySelector('.subject');
 window.addEventListener('load',e=>{
     const checkToken=localStorage.getItem('token');
     if(!checkToken){
           window.location.replace(window.location.origin+"/index.html");
     }
 })
-const check=async ()=>{
-    const result=await fetchData();
-    userInformation=result.data;
-    console.log("Hey "+userInformation.name);
+window.addEventListener('load',e=>{
+    getTasks();
+})
+const getTasks=async () =>{
+/*   
+doneList.querySelectorAll('*').forEach(n => n.remove());
+
+todoList.querySelectorAll('*').forEach(n => n.remove());
+
+progressList.querySelectorAll('*').forEach(n => n.remove());
+*/
+    var result=await getAllTask();
+    if(result){
+        if(result.status===200){
+            result=result.data;
+            result.sort(function(a,b){
+                return new Date(a.dueDate)-new Date(b.dueDate);
+            })
 }
-check();
+        
+        else{
+            window.alert("Smoething went wrong");
+            return;
+        }
+    }
+    else{
+        window.alert('Something went wrong');
+        return;
+    }
+    result.forEach(renderTask);
+}
+
+
+
+
 // All declarations and initializations
 var btn = document.querySelector(".drpdown");
 var btnLogout = document.querySelector("#logout");
@@ -29,20 +59,24 @@ const statusSection = document.querySelector("#status-section");
 const infoBox = document.querySelector(".info");
 
 // Event listener on whole document for click
-// document.addEventListener("click", () => {
-//     if (statusSection.classList.contains("blur")) {
-//         statusSection.classList.remove("blur");
-//         infoBox.style.display = "none";
-//     }
-// });
+
 
 // Dropdown for logout
 
 btn.addEventListener("click", () => {
     if (btnLogout.style.visibility === "visible")
         btnLogout.style.visibility = "hidden";
-    else btnLogout.style.visibility = "visible";
+    else{
+     btnLogout.style.visibility = "visible";
+    }
 });
+btnLogout.addEventListener('click',e=>{
+    logOut();
+    localStorage.clear();
+    window.location.replace(window.location.origin+"/index.html");
+})
+
+
 
 // To update TODO count, Progress count and Done count when a task is dragged to another list
 
@@ -57,6 +91,12 @@ setInterval(() => {
 draggables.forEach(draggable => {
     // Adding a blur effect on whole section when we click on any task for its details
     draggable.addEventListener("click", e => {
+       var id=e.target.id;
+       console.log(id);
+       console.log(e.target.textContent);
+       console.log(e.target);
+  
+
         if (statusSection.classList.contains("blur")) {
             statusSection.classList.remove("blur");
             infoBox.style.display = "none";
@@ -104,4 +144,78 @@ containers.forEach(container => {
             currentDraggable.classList = "draggable " + targetID + "-items";
         }
     });
+    
 });
+submitButton.addEventListener('submit',e=>{
+    e.preventDefault();
+    const des=document.querySelector('.task-description');
+    const date=document.getElementById('reminder-date');
+    var ele = document.getElementsByName('taskState');
+    var state=0;
+    
+    for(var i=0;i<ele.length;i++){
+        if(ele[i].checked){
+            state=ele[i].value;
+            console.log(ele[i].value);
+        }
+    }
+    const objData={
+        "description":des.value,
+        "dueDate":date.value,
+        "taskState":state
+    }
+    sendData(objData);
+    des.value="";
+    date.value="";
+   
+})
+const sendData=async (objData)=>{
+     const result=await postTask(objData);
+    
+    if(result){
+        if(result===201){
+        window.alert("Added Successfully");
+       await getTasks();
+        return true;
+    }
+     else{
+        window.alert("Something went wrong");
+        return false;
+    }
+  
+}
+  return false;  
+}
+const renderData=objData=>{
+    renderTask(objData);
+}
+
+const renderTask=objData=>{
+     var divSelection=objData.taskState;
+     var count;
+    if(divSelection==0){
+        divSelection="todo";
+    }
+    else if(divSelection==1){
+        divSelection="progress";
+    }
+    else{
+        divSelection="done";
+    }
+    count=document.getElementById(divSelection+'-count').innerHTML;
+    count=parseInt(count)+1;
+
+    divSelection+='-list';
+   
+    const container=document.getElementById(divSelection);
+  
+
+    const html=`<div class="draggable ${divSelection}-items" id="${divSelection}-item-${count}" draggable="true">
+                    ${objData.description}
+                   <p id="date" class="date--hide">${objData.dueDate}</p>
+                </div>`
+    container.insertAdjacentHTML('beforeend',html);
+}
+
+
+

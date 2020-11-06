@@ -5,9 +5,17 @@ const taskSchema=new mongoose.Schema({
         required: true,
         trim: true
     },
+    taskState:{
+        type:Number,
+        default:0
+    },
     completed: {
         type: Boolean,
         default: false
+    },
+    dueDate:{
+        type:Date,
+
     },
     owner:{
         type:mongoose.Schema.Types.ObjectId,

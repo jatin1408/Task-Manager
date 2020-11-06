@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const token=localStorage.getItem('token');
+var token=localStorage.getItem('token');
 const apiUrl='http://localhost:3000'
 
 axios.interceptors.request.use(
@@ -30,13 +30,35 @@ axios.interceptors.request.use(
 const logOut=async ()=>{
     try{
         const loggedOut=await axios.post(apiUrl+"/users/logout");
-        localStorage.removeItem('token');
+       
         return loggedOut.status;
     }
     catch{
             console.log("hey");
     }
 }
-export {fetchData,logOut};
+const postTask=async (data) =>{
+    token=localStorage.getItem('token');
+    try{
+     
+        const postData=await axios.post(apiUrl+"/tasks",data);
+        
+        return postData.status;
+    }
+    catch(e){
+        return null;
+    }
+}
+const getAllTask=async (data) =>{
+    try{
+        const getData= await axios.get(apiUrl+"/tasks");
+        return getData;
+    }
+    catch{
+        return null;
+    }
+}
+
+export {fetchData,logOut,postTask,getAllTask};
 
  

@@ -327,7 +327,7 @@ legend {
   display: flex;
   flex-direction: row;
   justify-content: space-around;
-  height: 86.5vh;
+  height: 88.5vh;
   background-color: #e7dfdd;
 }
 
@@ -435,6 +435,9 @@ legend {
   width: 500px;
   background-color: rgb(119, 3, 3);
   color: white;
+}
+.date--hide{
+  display: none;
 }
 
 /* STATUS SECTION ENDS */
