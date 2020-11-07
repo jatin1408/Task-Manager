@@ -1,4 +1,4 @@
-import {fetchData,logOut,postTask,getAllTask,getAvatar} from './utils/getInfo';
+import {fetchData,logOut,postTask,getAllTask,getAvatar,deleteTask,updateTask} from './utils/getInfo';
 import "../todo.css";
 var userInformation={};
 const submitButton=document.querySelector('.subject');
@@ -111,32 +111,27 @@ setInterval(() => {
 
 // Drag and drop behaviour
 
-containers.forEach(container => {
 
+
+    
+ 
+    
+containers.forEach(container => {
+   
     container.addEventListener("click", e => {
-        
+         if (e.target.id === "remove-btn") {
+             
+             
+            const targetElement = e.target;
+            const taskId=targetElement.parentNode.childNodes[2].textContent;
+              removeTask(taskId);
+        }
         if (!e.target.classList.contains("draggable")) return;
         var id = e.target.id;
-        var content=e.target.textContent;
-   
-        var title=""
-        var i=0
-        for(;i<content.length;i++){
-            if(content.charAt(i)==='%'){
-                break;
-            }
-            title+=content.charAt(i);
-        }
-        i++;
+        var content=e.target.childNodes;
       
-        var date="";
-        for(;i<content.length;i++){
-             if(content.charAt(i)==='%'){
-                break;
-            }
-            date+=content.charAt(i);
-        }
-     
+       var title=content[0].textContent;
+    var date=content[1].textContent;
         
        
        var status;
@@ -175,6 +170,7 @@ containers.forEach(container => {
 
     container.addEventListener("dragstart", e => {
         const targetElement = e.target;
+       
         setTimeout(() => {
             if (targetElement.classList.contains("draggable"))
                 targetElement.classList.add("hide");
@@ -183,8 +179,26 @@ containers.forEach(container => {
 
     container.addEventListener("dragend", e => {
         const targetElement = e.target;
+    
+       const dbId=targetElement.childNodes[2].textContent;
+       var id=targetElement.classList[1]
+       const c=id.charAt(0)
+       
+       if(c==='t'){
+          id=0
+       }
+       else if(c==='p'){
+          id=1
+       }
+       else{
+          id=2
+       }
+      
+        patchTask(dbId,id);
+     
         if (targetElement.classList.contains("draggable"))
             targetElement.classList.remove("hide");
+      
     });
 
     container.addEventListener("dragover", e => {
@@ -206,6 +220,7 @@ containers.forEach(container => {
     });
 
 });
+
 submitButton.addEventListener('submit',e=>{
     e.preventDefault();
     const des=document.querySelector('.task-description');
@@ -276,16 +291,32 @@ const renderTask=objData=>{
     final+="-"+date.getFullYear();
   
     if(divSelection==='done-list'){
-         const html=`<div class="draggable ${divSelection}-items" id="${divSelection}-item-${count}" draggable="true">${objData.description}<p id="date" class="date--hide">%${final}</p><p id="dbId" class="db--hide">%${objData._id}</p><i id="remove-btn" class="fa fa-trash-o"></i></div>`
+         const html=`<div class="draggable ${divSelection}-items" id="${divSelection}-item-${count}" draggable="true">${objData.description}<p id="date" class="date--hide">${final}</p><p id="dbId" class="db--hide">${objData._id}</p><i id="remove-btn" class="fa fa-trash-o"></i></div>`
     container.insertAdjacentHTML('beforeend',html);
     }
     else{
 
     
-    const html=`<div class="draggable ${divSelection}-items" id="${divSelection}-item-${count}" draggable="true">${objData.description}<p id="date" class="date--hide">%${final}</p><p id="dbId" class="db--hide">%${objData._id}</p></div>`
+    const html=`<div class="draggable ${divSelection}-items" id="${divSelection}-item-${count}" draggable="true">${objData.description}<p id="date" class="date--hide">${final}</p><p id="dbId" class="db--hide">${objData._id}</p></div>`
     container.insertAdjacentHTML('beforeend',html);
     }
 }
-
-
+const removeTask= async (id)=>{
+    const result=await deleteTask(id);
+    if(result===200){
+        
+        await getTasks();
+        return true;
+    }
+    return false;
+}
+const patchTask=async (id,state)=>{
+    const result=await updateTask(id,state);
+    if(result===200){
+        
+        await getTasks();
+        return true;
+    }
+    return false;
+}
 

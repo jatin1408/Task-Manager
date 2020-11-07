@@ -12,6 +12,7 @@
   "license": "ISC",
   "dependencies": {
     "axios": "^0.20.0",
+   
     "bootstrap": "^4.5.3",
     "html-webpack-plugin": "^4.5.0"
   },

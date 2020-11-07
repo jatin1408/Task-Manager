@@ -17,13 +17,13 @@ axios.interceptors.request.use(
 
     const fetchData=async ()=>{
         try{
-            console.log("hey");
+         
              const result= await axios.get(apiUrl+"/users/me");
             return result;
            
         }
         catch{
-                console.log("hey");
+               
                 
     }
 }
@@ -34,7 +34,7 @@ const logOut=async ()=>{
         return loggedOut.status;
     }
     catch{
-            console.log("hey");
+           return null
     }
 }
 const postTask=async (data) =>{
@@ -58,18 +58,36 @@ const getAllTask=async (data) =>{
         return null;
     }
 }
+const deleteTask=async (id)=>{
+    try{
+        const deleted=await axios.delete(apiUrl+"/tasks/"+id);
+        return deleted.status;
+    }
+    catch{
+        return null;
+    }
+}
 const getAvatar=async ()=>{
     var getId=await axios.get(apiUrl+"/users/me");
     getId=getId.data._id;
     var avatar=await axios.get(apiUrl+"/users/"+getId+"/avatar");
-    console.log(avatar);
+
     if(avatar.status===200){
         return avatar.config.url;
     }
     return null;
 }
+const updateTask=async (id,state)=>{
+    var result=await axios.patch(apiUrl+"/tasks/"+id,{
+        taskState:state
+    })
+    if(result.status===200){
+        return result.status;
+    }
+    return null;
+}
 
 
-export {fetchData,logOut,postTask,getAllTask,getAvatar};
+export {fetchData,logOut,postTask,getAllTask,getAvatar,deleteTask,updateTask};
 
  
