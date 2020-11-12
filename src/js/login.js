@@ -3,7 +3,7 @@ signIn();
 
 function signIn(){
   if(localStorage.getItem('token')){
-    console.log(localStorage.getItem('token'));
+    
     window.location.replace(window.location.origin+"/home.html");
   }
   else{
@@ -26,7 +26,7 @@ const u = document.querySelector('.box');
              window.location.replace(window.location.origin+"/home.html");
           }
        
-          console.log(response)
+         
         }).catch(e=>{
           if(e.response){
             if(e.response.status===400){
@@ -35,12 +35,10 @@ const u = document.querySelector('.box');
             }
           }
           else if(e.request){
-            console.log("not here")
-            console.log(e);
-            console.log(e.request);
+           
           }
           else{
-            console.log("check")
+            
           }
         })
       })

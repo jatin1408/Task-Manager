@@ -20,6 +20,7 @@ body {
   font-weight: 500;
 }
 .boxSignUp input[type="text"],
+.boxSignUp label[for="file"],
 .boxSignUp input[type="email"],
 .boxSignUp input[type="password"] {
   border: 0;
@@ -57,4 +58,29 @@ body {
 }
 .boxSignUp input[type="submit"]:hover {
   background: #2ecc71;
+}
+.inputfile {
+	width: 0.1px;
+	height: 0.1px;
+	opacity: 0;
+	overflow: hidden;
+	position: absolute;
+	z-index: -1;
+}
+.inputfile + label {
+  cursor: pointer;
+  font-size: 1em;
+  color: black;
+  display: inline-block;
+}
+
+.inputfile:focus + label,
+.inputfile + label:hover,
+#file-label:hover {
+  background-color: #3498db;
+  color: white;
+}
+
+#file-label {
+  color: rgba(255, 255, 255, 0.404);
 }
